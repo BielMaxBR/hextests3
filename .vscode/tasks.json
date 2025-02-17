@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "C:\\Users\\gbiel\\Documents\\programs\\Godot\\mono 3.6\\Godot_v3.6-stable_mono_win64.exe",
+            "type": "process",
+            "args": [
+                "--build-solutions",
+                "--path",
+                "${workspaceRoot}",
+                "--no-window",
+                "--headless",
+                "--server",
+                "-q"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

@@ -1,0 +1,50 @@
+{
+    // Use o IntelliSense para saber mais sobre os atributos possíveis.
+    // Focalizar para exibir as descrições dos atributos existentes.
+    // Para obter mais informações, acesse: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Play in Editor",
+            "type": "godot-mono",
+            "mode": "playInEditor",
+            "request": "launch"
+        },
+        {
+            "name": "Launch",
+            "type": "godot-mono",
+            "request": "launch",
+            "mode": "executable",
+            "preLaunchTask": "build",
+            "executable": "C:\\Users\\gbiel\\Documents\\programs\\Godot\\mono 3.6\\Godot_v3.6-stable_mono_win64.exe",
+            "executableArguments": [
+                "--path",
+                "${workspaceRoot}",
+                "--no-window",
+                "--headless",
+                "--server"
+            ]
+        },
+        {
+            "name": "Launch (Select Scene)",
+            "type": "godot-mono",
+            "request": "launch",
+            "mode": "executable",
+            "preLaunchTask": "build",
+            "executable": "C:\\Users\\gbiel\\Documents\\programs\\Godot\\mono 3.6\\Godot_v3.6-stable_mono_win64.exe",
+            "executableArguments": [
+                "--path",
+                "${workspaceRoot}",
+                "${command:SelectLaunchScene}"
+            ]
+        },
+        {
+            "name": "Attach",
+            "type": "godot-mono",
+            "request": "attach",
+            "address": "localhost",
+            "port": 23685
+        }
+    ]
+}
