@@ -6,6 +6,7 @@ public class ServerResource : NetworkResouce
     readonly WebSocketServer server = new WebSocketServer(); 
     public override void Setup()
     {
+        base.Setup();
         Error error = server.Listen(5000, new string[] { }, true);
 
         if (error != Error.Ok)
@@ -18,6 +19,16 @@ public class ServerResource : NetworkResouce
         GD.Print("Server Online");
     }
 
+    public override void RegisterHandlers()
+    {
+        base.RegisterHandlers();
+
+        On<PingData>((data, senderId) =>
+        {
+            GD.Print("Ping");
+            RootNode.SendId(senderId, nameof(PongData), new Godot.Collections.Dictionary {});
+        });
+    }
     public override void Process(float delta)
     {
         // server.Poll();
