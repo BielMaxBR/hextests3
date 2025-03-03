@@ -53,4 +53,13 @@ public class Root : Node2D
     {
         RpcId(id, "Recieved_data", eventType, data, GetTree().GetNetworkUniqueId());
     }
+    public void SendU(string eventType, Godot.Collections.Dictionary data)
+    {
+        RpcUnreliable("Recieved_data", eventType, data, GetTree().GetNetworkUniqueId());
+    }
+
+    public void SendIdU(int id, string eventType, Godot.Collections.Dictionary data)
+    {
+        RpcUnreliableId(id, "Recieved_data", eventType, data, GetTree().GetNetworkUniqueId());
+    }
 }

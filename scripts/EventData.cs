@@ -48,6 +48,11 @@ public class MovePlayerData : EventData {
     public Vector2 Position { get; set; }
 }
 
+public class InputData : EventData {
+    public int Id { get; set; }
+    public Vector2 Direction { get; set; }
+}
+
 public class PlayerDisconnectedData : EventData {
     public int Id { get; set; }
 }
