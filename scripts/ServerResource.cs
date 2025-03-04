@@ -4,13 +4,13 @@ using System.Linq;
 
 public class ServerResource : NetworkResouce
 {
-    readonly WebSocketServer server = new WebSocketServer(); 
+    readonly WebSocketServer server = new WebSocketServer();
 
     readonly PackedScene PlayerScene = GD.Load<PackedScene>("res://scenes/Player.tscn");
     public override void Setup()
     {
         base.Setup();
-        Error error = server.Listen(5000, new string[] { }, true);
+        Error error = server.Listen(5000, new string[] { "ludus" }, true);
 
         if (error != Error.Ok)
         {
@@ -30,16 +30,16 @@ public class ServerResource : NetworkResouce
         On<PingData>((data, senderId) =>
         {
             GD.Print("Ping");
-            RootNode.SendId(senderId, nameof(PongData), new Godot.Collections.Dictionary {});
+            RootNode.SendId(senderId, nameof(PongData), new Godot.Collections.Dictionary { });
         });
 
         On<InputData>((data, senderId) =>
         {
             if (!RootNode.HasNode($"Player{data.Id}")) return;
-            
+
             var player = (Player)RootNode.GetNode($"Player{data.Id}");
             player.Direction = data.Direction;
-            
+
         });
     }
     public override void Process(float delta)
@@ -83,10 +83,12 @@ public class ServerResource : NetworkResouce
                 { "position", p.Position }
             };
             RootNode.SendId(id, nameof(SpawnPlayerData), spawnPlayerData);
+            RootNode.SendId(p.NetworkId, nameof(SpawnPlayerData), spawnPlayerData);
         }
-        RootNode.Send(nameof(PlayerConnectedData), playerData);
+        RootNode.SendId(id, nameof(PlayerConnectedData), playerData);
     }
-    void _OnClientDisconnected(int id) {
+    void _OnClientDisconnected(int id)
+    {
         GD.Print("Client disconnected");
         if (!RootNode.HasNode($"Player{id}")) return;
         var player = (Player)RootNode.GetNode($"Player{id}");

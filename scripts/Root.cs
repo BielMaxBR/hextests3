@@ -6,6 +6,7 @@ public class Root : Node2D
 {
     public NetworkResouce NetworkManager { get; set; }
 
+    [Export]
     bool server = false;
 
     public override void _Ready()
@@ -31,6 +32,7 @@ public class Root : Node2D
             NetworkManager = new ClientResource();
         }
         NetworkManager.RootNode = this;
+        GetTree().Multiplayer.RootNode = this;
         NetworkManager.Setup();
     }
     [Remote]

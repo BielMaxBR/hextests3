@@ -9,7 +9,8 @@ public class ClientResource : NetworkResouce
     public override void Setup()
     {
         base.Setup();
-        Error error = client.ConnectToUrl("ws://localhost:5000", new string[] { }, true);
+        
+        Error error = client.ConnectToUrl("ws://localhost:5000", new string[] {"ludus" }, true);
         if (error != Error.Ok)
         {
             GD.Print("Error: " + error);
@@ -32,6 +33,7 @@ public class ClientResource : NetworkResouce
             var player = (Player)PlayerScene.Instance();
             player.Name = data.Name;
             player.NetworkId = data.Id;
+            player.GetNode<Camera2D>("Camera2D").Current = true;
             RootNode.AddChild(player);
         });
         On<PlayerDisconnectedData>((data, senderId) =>
