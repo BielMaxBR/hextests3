@@ -10,6 +10,8 @@ public class ServerResource : NetworkResouce
     public override void Setup()
     {
         base.Setup();
+        
+        OS.SetWindowTitle("Server");
         Error error = server.Listen(5000, new string[] { "ludus" }, true);
 
         if (error != Error.Ok)
@@ -49,7 +51,8 @@ public class ServerResource : NetworkResouce
             var movePlayerData = new Godot.Collections.Dictionary
             {
                 { "id", player.NetworkId },
-                { "position", player.Position }
+                { "position", player.Position },
+                { "direction", player.Direction }
             };
             RootNode.SendU(nameof(MovePlayerData), movePlayerData);
         }
@@ -62,7 +65,7 @@ public class ServerResource : NetworkResouce
         var player = (Player)PlayerScene.Instance();
         player.Name = $"Player{id}";
         player.NetworkId = id;
-
+        player.Position = RootNode.spawn.Position;
         // Add the player to the scene
         RootNode.AddChild(player);
 
@@ -83,7 +86,7 @@ public class ServerResource : NetworkResouce
                 { "position", p.Position }
             };
             RootNode.SendId(id, nameof(SpawnPlayerData), spawnPlayerData);
-            RootNode.SendId(p.NetworkId, nameof(SpawnPlayerData), spawnPlayerData);
+            RootNode.SendId(p.NetworkId, nameof(SpawnPlayerData), playerData);
         }
         RootNode.SendId(id, nameof(PlayerConnectedData), playerData);
     }

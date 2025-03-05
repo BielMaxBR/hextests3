@@ -8,7 +8,7 @@ public class Root : Node2D
 
     [Export]
     bool server = false;
-
+    public Position2D spawn;
     public override void _Ready()
     {
         GD.Print("iniciar prefácio");
@@ -31,6 +31,8 @@ public class Root : Node2D
         {
             NetworkManager = new ClientResource();
         }
+
+        spawn = GetNode<Position2D>("Spawn");
         NetworkManager.RootNode = this;
         GetTree().Multiplayer.RootNode = this;
         NetworkManager.Setup();

@@ -16,7 +16,6 @@ public class Tester : Control
         // OS.Execute(OS.GetExecutablePath(), new string[] { "scenes/Root.tscn" }, false);
         RunProcess("Client1");
         RunProcess("Client2");
-
     }
 
     private void RunProcess(string name)
@@ -32,12 +31,12 @@ public class Tester : Control
 
         new_process.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
         {
-            GD.Print($"[{name}] ", e.Data);
+            if (e.Data != null && e.Data != "null") GD.Print($"[{name}] ", e.Data);
         });
 
         new_process.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
         {
-            GD.PrintErr($"[{name}] {e.Data}");
+            if (e.Data != null && e.Data != "null") GD.PrintErr($"[{name}] {e.Data}");
         });
 
         new_process.Exited += new EventHandler((sender, e) =>
@@ -53,7 +52,6 @@ public class Tester : Control
 
     public override void _ExitTree()
     {
-        base._ExitTree();
         foreach (var process in processes)
         {
             process.Kill();

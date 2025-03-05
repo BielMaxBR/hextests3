@@ -9,6 +9,7 @@ public class ClientResource : NetworkResouce
     public override void Setup()
     {
         base.Setup();
+        OS.SetWindowTitle("Client");
         
         Error error = client.ConnectToUrl("ws://localhost:5000", new string[] {"ludus" }, true);
         if (error != Error.Ok)
@@ -46,6 +47,7 @@ public class ClientResource : NetworkResouce
             if (!RootNode.HasNode($"Player{data.Id}")) return;
             var player = (Player)RootNode.GetNode($"Player{data.Id}");
             player.Position = data.Position;
+            player.Direction = data.Direction;
         });
 
         On<SpawnPlayerData>((data, senderId) =>
@@ -76,8 +78,7 @@ public class ClientResource : NetworkResouce
     private void OnClientConnected()
     {
         GD.Print("Client connected");
-        GD.Print("Ping?");
-        RootNode.Send(nameof(PingData), new Godot.Collections.Dictionary { });
+        OS.SetWindowTitle($"Client {RootNode.GetTree().GetNetworkUniqueId()}");
     }
 
     private void OnClientClosed()
