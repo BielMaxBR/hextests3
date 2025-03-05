@@ -11,7 +11,7 @@ public class ClientResource : NetworkResouce
         base.Setup();
         OS.SetWindowTitle("Client");
         
-        Error error = client.ConnectToUrl("ws://localhost:5000", new string[] {"ludus" }, true);
+        Error error = client.ConnectToUrl("ws://52.236.32.90:5000", new string[] {"ludus" }, true);
         if (error != Error.Ok)
         {
             GD.Print("Error: " + error);
