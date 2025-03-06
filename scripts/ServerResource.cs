@@ -37,16 +37,16 @@ public class ServerResource : NetworkResouce
 
         On<InputData>((data, senderId) =>
         {
-            if (!RootNode.HasNode($"Player{data.Id}")) return;
+            if (!RootNode.GetNode<YSort>("Players").HasNode($"Player{data.Id}")) return;
 
-            var player = (Player)RootNode.GetNode($"Player{data.Id}");
+            var player = (Player)RootNode.GetNode<YSort>("Players").GetNode($"Player{data.Id}");
             player.Direction = data.Direction;
 
         });
     }
     public override void Process(float delta)
     {
-        foreach (Player player in RootNode.GetChildren().OfType<Player>())
+        foreach (Player player in RootNode.GetNode<YSort>("Players").GetChildren().OfType<Player>())
         {
             var movePlayerData = new Godot.Collections.Dictionary
             {
@@ -67,23 +67,26 @@ public class ServerResource : NetworkResouce
         player.NetworkId = id;
         player.Position = RootNode.spawn.Position;
         // Add the player to the scene
-        RootNode.AddChild(player);
+        RootNode.GetNode<YSort>("Players").AddChild(player);
 
         // Send the player information to all clients
         var playerData = new Godot.Collections.Dictionary
         {
             { "id", id },
-            { "name", player.Name }
+            { "name", player.Name },
+            { "position", player.Position },
+            { "direction", player.Direction }
         };
 
-        foreach (Player p in RootNode.GetChildren().OfType<Player>())
+        foreach (Player p in RootNode.GetNode<YSort>("Players").GetChildren().OfType<Player>())
         {
             if (p.NetworkId == id) continue;
             var spawnPlayerData = new Godot.Collections.Dictionary
             {
                 { "id", p.NetworkId },
                 { "name", p.Name },
-                { "position", p.Position }
+                { "position", p.Position },
+                { "direction", p.LastDirection }
             };
             RootNode.SendId(id, nameof(SpawnPlayerData), spawnPlayerData);
             RootNode.SendId(p.NetworkId, nameof(SpawnPlayerData), playerData);
@@ -93,8 +96,8 @@ public class ServerResource : NetworkResouce
     void _OnClientDisconnected(int id)
     {
         GD.Print("Client disconnected");
-        if (!RootNode.HasNode($"Player{id}")) return;
-        var player = (Player)RootNode.GetNode($"Player{id}");
+        if (!RootNode.GetNode<YSort>("Players").HasNode($"Player{id}")) return;
+        var player = (Player)RootNode.GetNode<YSort>("Players").GetNode($"Player{id}");
         RootNode.Send(nameof(PlayerDisconnectedData), new Godot.Collections.Dictionary { { "id", id } });
         player.QueueFree();
     }

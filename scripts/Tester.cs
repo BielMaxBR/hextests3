@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 public class Tester : Control
 {
@@ -11,10 +12,11 @@ public class Tester : Control
     // private string b = "text";
     List<Process> processes = new List<Process>();
     // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
+    public override async void _Ready()
     {
         // OS.Execute(OS.GetExecutablePath(), new string[] { "scenes/Root.tscn" }, false);
         RunProcess("Client1");
+        await ToSignal(GetTree().CreateTimer(5, false), "timeout");
         RunProcess("Client2");
     }
 

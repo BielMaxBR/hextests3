@@ -41,6 +41,7 @@ public class SpawnPlayerData : EventData {
     public int Id { get; set; }
     public string Name { get; set; }
     public Vector2 Position { get; set; }
+    public Vector2 Direction { get; set; }
 }
 
 public class MovePlayerData : EventData {
@@ -67,5 +68,7 @@ public class PlayerDisconnectedData : EventData {
 public class PlayerConnectedData : EventData {
     public int Id { get; set; }
     public string Name { get; set; }
+    public Vector2 Position { get; set; }
+    public Vector2 Direction { get; set; }
 }
 

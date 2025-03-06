@@ -3,7 +3,7 @@ using System;
 
 public class Player : KinematicBody2D
 {
-    public int Speed = 200;
+    public int Speed = 150;
     public Vector2 Velocity = new Vector2();
     public Vector2 Direction = new Vector2();
     public Vector2 LastDirection = new Vector2();
@@ -15,6 +15,9 @@ public class Player : KinematicBody2D
     {
         anim = GetNode<AnimationPlayer>("AnimationPlayer");
         sprite = GetNode<Sprite>("Sprite");
+        LastDirection = Direction;
+        anim.Play("parou");
+        SetAngle(LastDirection.Rotated(Mathf.Deg2Rad(-90)).Angle());
     }
     public override void _PhysicsProcess(float delta)
     {
@@ -26,13 +29,13 @@ public class Player : KinematicBody2D
                 LastDirection = Direction;
             }
             anim.Play("ande");
-            SetAngle(Direction.Rotated(Mathf.Deg2Rad(-90)).Angle());
+            // SetAngle(LastDirection.Rotated(Mathf.Deg2Rad(-90)).Angle());
         }
         else
         {
             anim.Play("parou");
-            SetAngle(LastDirection.Rotated(Mathf.Deg2Rad(-90)).Angle());
         }
+        SetAngle(LastDirection.Rotated(Mathf.Deg2Rad(-90)).Angle());
     
         Velocity = MoveAndSlide(Direction * Speed);
     }
