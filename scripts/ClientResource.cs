@@ -62,7 +62,7 @@ public class ClientResource : NetworkResouce
             player.Position = new Vector2(
                 Mathf.Lerp(player.Position.x, data.Position.x, 0.5f),// data.timestamp - lastTimestamps[data.Id]),
                 Mathf.Lerp(player.Position.y, data.Position.y, 0.5f));//data.timestamp - lastTimestamps[data.Id]));
-            GD.Print(player.Position, " ", player.Direction);
+            // GD.Print(player.Position, " ", player.Direction);
             // lastTimestamps[data.Id] = data.timestamp;
         });
 
@@ -72,7 +72,7 @@ public class ClientResource : NetworkResouce
             var player = (Player)RootNode.GetNode<YSort>("Players").GetNode($"Player{data.Id}");
             player.Direction = data.Direction;
         });
-        
+
         On<SpawnPlayerData>((data, senderId) =>
         {
             // GD.Print(data.Position, data.Direction);
