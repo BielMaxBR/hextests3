@@ -40,19 +40,24 @@ public class ServerResource : NetworkResouce
             if (!RootNode.GetNode<YSort>("Players").HasNode($"Player{data.Id}")) return;
 
             var player = (Player)RootNode.GetNode<YSort>("Players").GetNode($"Player{data.Id}");
+            var directionData = new Godot.Collections.Dictionary
+            {
+                { "id", data.Id },
+                { "direction", data.Direction }
+            };
+            RootNode.SendId(senderId, nameof(DirectionData), directionData);
             player.Direction = data.Direction;
-
         });
     }
     public override void Process(float delta)
     {
         foreach (Player player in RootNode.GetNode<YSort>("Players").GetChildren().OfType<Player>())
         {
+            if (player.LastPosition == player.Position) continue;
             var movePlayerData = new Godot.Collections.Dictionary
             {
                 { "id", player.NetworkId },
                 { "position", player.Position },
-                { "direction", player.Direction }
             };
             RootNode.SendU(nameof(MovePlayerData), movePlayerData);
         }

@@ -7,15 +7,19 @@ public class Player : KinematicBody2D
     public Vector2 Velocity = new Vector2();
     public Vector2 Direction = new Vector2();
     public Vector2 LastDirection = new Vector2();
+    public Vector2 LastPosition = new Vector2();
+    public bool IsLocal = false;
     public int NetworkId = -1;
     private AnimationPlayer anim;
     private Sprite sprite;
 
     public override void _Ready()
     {
+        GetNode<Camera2D>("Camera2D").Current = IsLocal;
         anim = GetNode<AnimationPlayer>("AnimationPlayer");
         sprite = GetNode<Sprite>("Sprite");
         LastDirection = Direction;
+        LastPosition = Position;
         anim.Play("parou");
         SetAngle(LastDirection.Rotated(Mathf.Deg2Rad(-90)).Angle());
     }
@@ -36,8 +40,11 @@ public class Player : KinematicBody2D
             anim.Play("parou");
         }
         SetAngle(LastDirection.Rotated(Mathf.Deg2Rad(-90)).Angle());
-    
-        Velocity = MoveAndSlide(Direction * Speed);
+        if (LastPosition != Position)
+        {
+            LastPosition = Position;
+        }
+        if (!IsLocal) Velocity = MoveAndSlide(Direction * Speed);
     }
 
     private void SetAngle(float angle)

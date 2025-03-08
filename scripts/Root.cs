@@ -38,8 +38,9 @@ public class Root : Node2D
         NetworkManager.Setup();
     }
     [Remote]
+        // esse senderId tá inutil aq, mude dps ###################################################################################################
     public void Recieved_data(string eventType, Godot.Collections.Dictionary data, int senderId)
-    {
+    { 
         // GD.Print($"recieved_data: {data} in event {eventType} from {senderId}");
         NetworkManager.HandleEvent(eventType, data, senderId);
     }

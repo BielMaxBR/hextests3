@@ -11,8 +11,16 @@ config_version=4
 [application]
 
 config/name="hextests3"
-run/main_scene="res://scenes/Root.tscn"
+run/main_scene="res://scenes/Tester.tscn"
 config/icon="res://icon.png"
+run/main_scene.production="res://scenes/Root.tscn"
+
+[display]
+
+window/per_pixel_transparency/allowed=true
+window/per_pixel_transparency/enabled=true
+window/stretch/mode="viewport"
+window/stretch/aspect="keep_height"
 
 [gdnative]
 
@@ -83,4 +91,5 @@ common/enable_pause_aware_picking=true
 quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
+viewport/transparent_background=true
 environment/default_environment="res://default_env.tres"

@@ -17,7 +17,7 @@ public class Tester : Control
         // OS.Execute(OS.GetExecutablePath(), new string[] { "scenes/Root.tscn" }, false);
         RunProcess("Client1");
         await ToSignal(GetTree().CreateTimer(5, false), "timeout");
-        RunProcess("Client2");
+        // RunProcess("Client2");
     }
 
     private void RunProcess(string name)
