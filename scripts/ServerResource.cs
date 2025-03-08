@@ -43,7 +43,8 @@ public class ServerResource : NetworkResouce
             var directionData = new Godot.Collections.Dictionary
             {
                 { "id", data.Id },
-                { "direction", data.Direction }
+                { "direction", data.Direction },
+                { "timestamp", OS.GetTicksMsec() }
             };
             RootNode.SendId(senderId, nameof(DirectionData), directionData);
             player.Direction = data.Direction;

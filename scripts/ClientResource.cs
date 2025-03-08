@@ -7,7 +7,7 @@ public class ClientResource : NetworkResouce
     readonly WebSocketClient client = new WebSocketClient();
     readonly PackedScene PlayerScene = GD.Load<PackedScene>("res://scenes/Player.tscn");
     Vector2 lastDirection = Vector2.Zero;
-    // Dictionary<int, int> lastTimestamps = new Dictionary<int, int>();
+    Dictionary<int, int> lastTimestamps = new Dictionary<int, int>();
     public override void Setup()
     {
         base.Setup();
@@ -15,7 +15,7 @@ public class ClientResource : NetworkResouce
         string IP = "localhost";
         if (OS.HasFeature("production"))
         {
-            IP = "52.169.17.112";
+            IP = "137.131.181.110";
         }
         Error error = client.ConnectToUrl($"ws://{IP}:5000", new string[] { "ludus" }, true);
         if (error != Error.Ok)
@@ -58,12 +58,18 @@ public class ClientResource : NetworkResouce
             // if (player.Velocity != Vector2.Zero) return;
 
             // GD.Print($"Latency: {OS.GetTicksMsec() - (ulong)lastTimestamp}");
-            // if (!lastTimestamps.ContainsKey(data.Id)) lastTimestamps[data.Id] = data.timestamp;
-            player.Position = new Vector2(
-                Mathf.Lerp(player.Position.x, data.Position.x, 0.5f),// data.timestamp - lastTimestamps[data.Id]),
-                Mathf.Lerp(player.Position.y, data.Position.y, 0.5f));//data.timestamp - lastTimestamps[data.Id]));
+            if (!lastTimestamps.ContainsKey(data.Id)) lastTimestamps[data.Id] = data.timestamp;
+            Tween tween = player.GetNode<Tween>("Tween");
+
+            float timer = ((int)OS.GetTicksMsec() - data.timestamp) / 1000000.0f;
+            GD.Print(timer);
+            tween.InterpolateProperty(player, "position", player.Position, data.Position, timer, Tween.TransitionType.Linear, Tween.EaseType.InOut);
+            tween.Start();
+            // player.Position = new Vector2(
+            //     Mathf.Lerp(player.Position.x, data.Position.x, timer),// data.timestamp - lastTimestamps[data.Id]),
+            //     Mathf.Lerp(player.Position.y, data.Position.y, timer));//data.timestamp - lastTimestamps[data.Id]));
             // GD.Print(player.Position, " ", player.Direction);
-            // lastTimestamps[data.Id] = data.timestamp;
+            lastTimestamps[data.Id] = data.timestamp;
         });
 
         On<DirectionData>((data, senderId) =>
