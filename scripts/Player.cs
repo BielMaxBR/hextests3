@@ -9,6 +9,7 @@ public class Player : KinematicBody2D
     public Vector2 LastDirection = new Vector2();
     public Vector2 LastPosition = new Vector2();
     public bool IsLocal = false;
+    public bool IsClient = false;
     public int NetworkId = -1;
     private AnimationPlayer anim;
     private Sprite sprite;
@@ -20,8 +21,13 @@ public class Player : KinematicBody2D
         GetNode<Camera2D>("Camera2D").Current = IsLocal;
         anim = GetNode<AnimationPlayer>("AnimationPlayer");
         sprite = GetNode<Sprite>("Sprite");
+        
         LastDirection = Direction;
+        
+        PredictedPosition = Position;
+        ServerPosition = Position;
         LastPosition = Position;
+        
         anim.Play("parou");
         SetAngle(LastDirection.Rotated(Mathf.Deg2Rad(-90)).Angle());
     }
@@ -46,19 +52,19 @@ public class Player : KinematicBody2D
         {
             LastPosition = Position;
         }
-        if (!IsLocal) Velocity = MoveAndSlide(Direction * Speed);
+        if (!IsClient) Velocity = MoveAndSlide(Direction * Speed);
         else
         {
             PredictedPosition += Velocity * delta;
 
-            if (PredictedPosition.DistanceTo(ServerPosition) > 10)
+            if (PredictedPosition.DistanceTo(ServerPosition) > 50)
             {
-                GD.Print(Velocity);
+                // GD.Print(Velocity);
                 PredictedPosition = ServerPosition;
             } else {
                 PredictedPosition = new Vector2(
-                    Mathf.Lerp(PredictedPosition.x, ServerPosition.x, 0.1f),
-                    Mathf.Lerp(PredictedPosition.y, ServerPosition.y, 0.1f)
+                    Mathf.Lerp(PredictedPosition.x, ServerPosition.x, 0.3f),
+                    Mathf.Lerp(PredictedPosition.y, ServerPosition.y, 0.3f)
                 );
             }
             Position = PredictedPosition;

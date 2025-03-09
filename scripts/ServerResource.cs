@@ -45,7 +45,7 @@ public class ServerResource : NetworkResouce
                 { "id", data.Id },
                 { "direction", data.Direction }
             };
-            RootNode.SendId(senderId, nameof(DirectionData), directionData);
+            RootNode.Send(nameof(DirectionData), directionData);
             player.Direction = data.Direction;
         });
     }

@@ -43,6 +43,7 @@ public class ClientResource : NetworkResouce
             player.Direction = data.Direction;
 
             player.IsLocal = true;
+            player.IsClient = true;
             RootNode.GetNode<YSort>("Players").AddChild(player);
         });
         On<PlayerDisconnectedData>((data, senderId) =>
@@ -74,6 +75,7 @@ public class ClientResource : NetworkResouce
             var player = (Player)PlayerScene.Instance();
             player.Name = $"Player{data.Id}";
             player.NetworkId = data.Id;
+            player.IsClient = true;
             player.Position = data.Position;
             player.Direction = data.Direction;
             player.LastDirection = data.Direction;
