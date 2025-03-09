@@ -37,9 +37,9 @@ public class ServerResource : NetworkResouce
 
         On<InputData>((data, senderId) =>
         {
-            if (!RootNode.GetNode<YSort>("Players").HasNode($"Player{data.Id}")) return;
+            if (!RootNode.players.HasNode($"Player{data.Id}")) return;
 
-            var player = (Player)RootNode.GetNode<YSort>("Players").GetNode($"Player{data.Id}");
+            var player = (Player)RootNode.players.GetNode($"Player{data.Id}");
             var directionData = new Godot.Collections.Dictionary
             {
                 { "id", data.Id },
@@ -51,7 +51,7 @@ public class ServerResource : NetworkResouce
     }
     public override void Process(float delta)
     {
-        foreach (Player player in RootNode.GetNode<YSort>("Players").GetChildren().OfType<Player>())
+        foreach (Player player in RootNode.players.GetChildren().OfType<Player>())
         {
             // if (player.LastPosition == player.Position) continue;
             var movePlayerData = new Godot.Collections.Dictionary
@@ -73,7 +73,7 @@ public class ServerResource : NetworkResouce
         player.NetworkId = id;
         player.Position = RootNode.spawn.Position;
         // Add the player to the scene
-        RootNode.GetNode<YSort>("Players").AddChild(player);
+        RootNode.players.AddChild(player);
 
         // Send the player information to all clients
         var playerData = new Godot.Collections.Dictionary
@@ -84,7 +84,7 @@ public class ServerResource : NetworkResouce
             { "direction", player.Direction }
         };
 
-        foreach (Player p in RootNode.GetNode<YSort>("Players").GetChildren().OfType<Player>())
+        foreach (Player p in RootNode.players.GetChildren().OfType<Player>())
         {
             if (p.NetworkId == id) continue;
             var spawnPlayerData = new Godot.Collections.Dictionary
@@ -102,8 +102,8 @@ public class ServerResource : NetworkResouce
     void _OnClientDisconnected(int id)
     {
         GD.Print("Client disconnected");
-        if (!RootNode.GetNode<YSort>("Players").HasNode($"Player{id}")) return;
-        var player = (Player)RootNode.GetNode<YSort>("Players").GetNode($"Player{id}");
+        if (!RootNode.players.HasNode($"Player{id}")) return;
+        var player = (Player)RootNode.players.GetNode($"Player{id}");
         RootNode.Send(nameof(PlayerDisconnectedData), new Godot.Collections.Dictionary { { "id", id } });
         player.QueueFree();
     }

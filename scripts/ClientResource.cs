@@ -44,17 +44,17 @@ public class ClientResource : NetworkResouce
 
             player.IsLocal = true;
             player.IsClient = true;
-            RootNode.GetNode<YSort>("Players").AddChild(player);
+            RootNode.players.AddChild(player);
         });
         On<PlayerDisconnectedData>((data, senderId) =>
         {
-            if (!RootNode.GetNode<YSort>("Players").HasNode($"Player{data.Id}")) return;
-            RootNode.GetNode<YSort>("Players").GetNode($"Player{data.Id}").QueueFree();
+            if (!RootNode.players.HasNode($"Player{data.Id}")) return;
+            RootNode.players.GetNode($"Player{data.Id}").QueueFree();
         });
         On<MovePlayerData>((data, senderId) =>
         {
-            if (!RootNode.GetNode<YSort>("Players").HasNode($"Player{data.Id}")) return;
-            var player = (Player)RootNode.GetNode<YSort>("Players").GetNode($"Player{data.Id}");
+            if (!RootNode.players.HasNode($"Player{data.Id}")) return;
+            var player = (Player)RootNode.players.GetNode($"Player{data.Id}");
             // if (player.Velocity != Vector2.Zero) return;
             player.ServerPosition = data.Position;
             player.Velocity = data.Velocity;
@@ -64,8 +64,8 @@ public class ClientResource : NetworkResouce
 
         On<DirectionData>((data, senderId) =>
         {
-            if (!RootNode.GetNode<YSort>("Players").HasNode($"Player{data.Id}")) return;
-            var player = (Player)RootNode.GetNode<YSort>("Players").GetNode($"Player{data.Id}");
+            if (!RootNode.players.HasNode($"Player{data.Id}")) return;
+            var player = (Player)RootNode.players.GetNode($"Player{data.Id}");
             player.Direction = data.Direction;
         });
 
@@ -79,7 +79,7 @@ public class ClientResource : NetworkResouce
             player.Position = data.Position;
             player.Direction = data.Direction;
             player.LastDirection = data.Direction;
-            RootNode.GetNode<YSort>("Players").AddChild(player);
+            RootNode.players.AddChild(player);
         });
     }
 
@@ -90,7 +90,7 @@ public class ClientResource : NetworkResouce
         if (direction == lastDirection) return;
 
         lastDirection = direction;
-        var inputData = new Godot.Collections.Dictionary
+        var inputData = new Dictionary
             {
                 { "id", RootNode.GetTree().GetNetworkUniqueId() },
                 { "direction", direction }
