@@ -20,11 +20,12 @@ public class ClientResource : NetworkResouce
         if (OS.HasFeature("production"))
         {
             IP = "137.131.181.110";
+            client.VerifySsl = false;
         }
 #if GODOT_WEB
-        Error error = client.ConnectToUrl($"wss://{IP}", new string[] { "ludus" }, true);
+        Error error = client.ConnectToUrl($"wss://{IP}:433", new string[] { "ludus" }, true);
 #else
-        Error error = client.ConnectToUrl($"wss://{IP}", new string[] { "ludus" }, true);
+        Error error = client.ConnectToUrl($"ws://{IP}:5000", new string[] { "ludus" }, true);
         // Error error = client.CreateClient($"{IP}", 5000);//, new string[] { "ludus" }, true);
 #endif  
         if (error != Error.Ok)
