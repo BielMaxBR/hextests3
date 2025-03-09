@@ -4,7 +4,7 @@ using System;
 
 public class ClientResource : NetworkResouce
 {
-    readonly WebSocketClient client = new WebSocketClient();
+    readonly NetworkedMultiplayerENet client = new NetworkedMultiplayerENet();
     readonly PackedScene PlayerScene = GD.Load<PackedScene>("res://scenes/Player.tscn");
     Vector2 lastDirection = Vector2.Zero;
     public override void Setup()
@@ -16,7 +16,8 @@ public class ClientResource : NetworkResouce
         {
             IP = "137.131.181.110";
         }
-        Error error = client.ConnectToUrl($"ws://{IP}:5000", new string[] { "ludus" }, true);
+        // Error error = client.ConnectToUrl($"ws://{IP}:5000", new string[] { "ludus" }, true);
+        Error error = client.CreateClient($"{IP}",5000);//, new string[] { "ludus" }, true);
         if (error != Error.Ok)
         {
             GD.Print("Error: " + error);
@@ -86,7 +87,7 @@ public class ClientResource : NetworkResouce
     public override void Process(float delta)
     {
         Vector2 direction = Input.GetVector("left", "right", "up", "down");
-
+        // direction = Vector2.Up.Rotated(GD.Randf() * 2*Mathf.Pi);
         if (direction == lastDirection) return;
 
         lastDirection = direction;
