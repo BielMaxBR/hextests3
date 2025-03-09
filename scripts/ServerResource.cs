@@ -5,7 +5,8 @@ using System.Linq;
 public class ServerResource : NetworkResouce
 {
     readonly WebSocketServer server = new WebSocketServer();
-
+    private float ElapsedTime = 0;
+    private readonly float UpdateRate = 40 / 1000f;
     readonly PackedScene PlayerScene = GD.Load<PackedScene>("res://scenes/Player.tscn");
     public override void Setup()
     {
@@ -51,9 +52,12 @@ public class ServerResource : NetworkResouce
     }
     public override void Process(float delta)
     {
+        ElapsedTime += delta;
+        if (ElapsedTime < UpdateRate) return;
+        ElapsedTime = 0;
         foreach (Player player in RootNode.players.GetChildren().OfType<Player>())
         {
-            // if (player.LastPosition == player.Position) continue;
+            if (player.LastPosition == player.Position && player.Velocity == Vector2.Zero) continue;
             var movePlayerData = new Godot.Collections.Dictionary
             {
                 { "id", player.NetworkId },

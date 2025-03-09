@@ -22,8 +22,6 @@ public class Player : KinematicBody2D
         anim = GetNode<AnimationPlayer>("AnimationPlayer");
         sprite = GetNode<Sprite>("Sprite");
         
-        LastDirection = Direction;
-        
         PredictedPosition = Position;
         ServerPosition = Position;
         LastPosition = Position;
@@ -48,10 +46,6 @@ public class Player : KinematicBody2D
             anim.Play("parou");
         }
         SetAngle(LastDirection.Rotated(Mathf.Deg2Rad(-90)).Angle());
-        if (LastPosition != Position)
-        {
-            LastPosition = Position;
-        }
         if (!IsClient) Velocity = MoveAndSlide(Direction * Speed);
         else
         {
@@ -68,6 +62,10 @@ public class Player : KinematicBody2D
                 );
             }
             Position = PredictedPosition;
+        }
+        if (LastPosition != Position)
+        {
+            LastPosition = Position;
         }
     }
 

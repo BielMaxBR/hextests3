@@ -77,7 +77,7 @@ public class ClientResource : NetworkResouce
             player.NetworkId = data.Id;
             player.IsClient = true;
             player.Position = data.Position;
-            player.Direction = data.Direction;
+            // player.Direction = data.Direction;
             player.LastDirection = data.Direction;
             RootNode.players.AddChild(player);
         });
