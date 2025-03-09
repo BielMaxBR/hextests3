@@ -4,7 +4,7 @@ using System.Linq;
 
 public class ServerResource : NetworkResouce
 {
-    readonly NetworkedMultiplayerENet server = new NetworkedMultiplayerENet();
+    readonly WebSocketServer server = new WebSocketServer();
     private float ElapsedTime = 0;
     private readonly float UpdateRate = 40 / 1000f;
     readonly PackedScene PlayerScene = GD.Load<PackedScene>("res://scenes/Player.tscn");
@@ -13,8 +13,8 @@ public class ServerResource : NetworkResouce
         base.Setup();
         
         OS.SetWindowTitle("Server");
-        // Error error = server.Listen(5000, new string[] { "ludus" }, true);
-        Error error = server.CreateServer(5000,100);// new string[] { "ludus" }, true);
+        Error error = server.Listen(5000, new string[] { "ludus" }, true);
+        // Error error = server.CreateServer(5000,100);// new string[] { "ludus" }, true);
 
         if (error != Error.Ok)
         {

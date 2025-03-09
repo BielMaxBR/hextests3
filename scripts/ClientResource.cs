@@ -7,7 +7,8 @@ public class ClientResource : NetworkResouce
 #if GODOT_WEB
     readonly WebSocketClient client = new WebSocketClient();
 #else
-    readonly NetworkedMultiplayerENet client = new NetworkedMultiplayerENet();
+    // readonly NetworkedMultiplayerENet client = new NetworkedMultiplayerENet();
+    readonly WebSocketClient client = new WebSocketClient();
 #endif
     readonly PackedScene PlayerScene = GD.Load<PackedScene>("res://scenes/Player.tscn");
     Vector2 lastDirection = Vector2.Zero;
@@ -23,7 +24,8 @@ public class ClientResource : NetworkResouce
 #if GODOT_WEB
         Error error = client.ConnectToUrl($"wss://{IP}", new string[] { "ludus" }, true);
 #else
-        Error error = client.CreateClient($"{IP}", 5000);//, new string[] { "ludus" }, true);
+        Error error = client.ConnectToUrl($"wss://{IP}", new string[] { "ludus" }, true);
+        // Error error = client.CreateClient($"{IP}", 5000);//, new string[] { "ludus" }, true);
 #endif  
         if (error != Error.Ok)
         {
