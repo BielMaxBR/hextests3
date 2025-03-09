@@ -43,8 +43,7 @@ public class ServerResource : NetworkResouce
             var directionData = new Godot.Collections.Dictionary
             {
                 { "id", data.Id },
-                { "direction", data.Direction },
-                { "timestamp", OS.GetTicksMsec() }
+                { "direction", data.Direction }
             };
             RootNode.SendId(senderId, nameof(DirectionData), directionData);
             player.Direction = data.Direction;
@@ -54,11 +53,12 @@ public class ServerResource : NetworkResouce
     {
         foreach (Player player in RootNode.GetNode<YSort>("Players").GetChildren().OfType<Player>())
         {
-            if (player.LastPosition == player.Position) continue;
+            // if (player.LastPosition == player.Position) continue;
             var movePlayerData = new Godot.Collections.Dictionary
             {
                 { "id", player.NetworkId },
                 { "position", player.Position },
+                { "velocity", player.Velocity }
             };
             RootNode.SendU(nameof(MovePlayerData), movePlayerData);
         }

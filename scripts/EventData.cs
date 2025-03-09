@@ -47,7 +47,7 @@ public class SpawnPlayerData : EventData {
 public class MovePlayerData : EventData {
     public int Id { get; set; }
     public Vector2 Position { get; set; }
-    public int timestamp { get; set; }
+    public Vector2 Velocity { get; set; }
 }
 
 public class DirectionData : EventData {

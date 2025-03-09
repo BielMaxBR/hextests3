@@ -13,6 +13,8 @@ public class Player : KinematicBody2D
     private AnimationPlayer anim;
     private Sprite sprite;
 
+    public Vector2 ServerPosition = new Vector2();
+    private Vector2 PredictedPosition = new Vector2();
     public override void _Ready()
     {
         GetNode<Camera2D>("Camera2D").Current = IsLocal;
@@ -45,6 +47,22 @@ public class Player : KinematicBody2D
             LastPosition = Position;
         }
         if (!IsLocal) Velocity = MoveAndSlide(Direction * Speed);
+        else
+        {
+            PredictedPosition += Velocity * delta;
+
+            if (PredictedPosition.DistanceTo(ServerPosition) > 10)
+            {
+                GD.Print(Velocity);
+                PredictedPosition = ServerPosition;
+            } else {
+                PredictedPosition = new Vector2(
+                    Mathf.Lerp(PredictedPosition.x, ServerPosition.x, 0.1f),
+                    Mathf.Lerp(PredictedPosition.y, ServerPosition.y, 0.1f)
+                );
+            }
+            Position = PredictedPosition;
+        }
     }
 
     private void SetAngle(float angle)
@@ -54,10 +72,10 @@ public class Player : KinematicBody2D
         int width = 80;
         float _angle = Mathf.Round(Mathf.Rad2Deg(angle)) + 180;
         float step = 360 / direction_count;
-        
+
         int direction = Mathf.RoundToInt(_angle / step);
         sprite.Hframes = sprite.Texture.GetWidth() / width;
-        sprite.RegionRect = new Rect2(0, direction * height, sprite.Texture.GetWidth(), height );
+        sprite.RegionRect = new Rect2(0, direction * height, sprite.Texture.GetWidth(), height);
     }
 
 }
