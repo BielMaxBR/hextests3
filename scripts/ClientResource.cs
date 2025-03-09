@@ -4,7 +4,11 @@ using System;
 
 public class ClientResource : NetworkResouce
 {
+#if GODOT_WEB
+    readonly WebSocketClient client = new WebSocketClient();
+#else
     readonly NetworkedMultiplayerENet client = new NetworkedMultiplayerENet();
+#endif
     readonly PackedScene PlayerScene = GD.Load<PackedScene>("res://scenes/Player.tscn");
     Vector2 lastDirection = Vector2.Zero;
     public override void Setup()
@@ -14,10 +18,13 @@ public class ClientResource : NetworkResouce
         string IP = "localhost";
         if (OS.HasFeature("production"))
         {
-            IP = "137.131.181.110";
+            IP = "137.131.181.110/server";
         }
-        // Error error = client.ConnectToUrl($"ws://{IP}:5000", new string[] { "ludus" }, true);
-        Error error = client.CreateClient($"{IP}",5000);//, new string[] { "ludus" }, true);
+#if GODOT_WEB
+        Error error = client.ConnectToUrl($"wss://{IP}", new string[] { "ludus" }, true);
+#else
+        Error error = client.CreateClient($"{IP}", 5000);//, new string[] { "ludus" }, true);
+#endif  
         if (error != Error.Ok)
         {
             GD.Print("Error: " + error);
@@ -60,7 +67,7 @@ public class ClientResource : NetworkResouce
             player.ServerPosition = data.Position;
             player.Velocity = data.Velocity;
             // GD.Print($"Latency: {OS.GetTicksMsec() - (ulong)lastTimestamp}");
-            
+
         });
 
         On<DirectionData>((data, senderId) =>
