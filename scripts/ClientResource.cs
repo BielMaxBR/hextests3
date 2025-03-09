@@ -18,7 +18,7 @@ public class ClientResource : NetworkResouce
         string IP = "localhost";
         if (OS.HasFeature("production"))
         {
-            IP = "137.131.181.110/server";
+            IP = "137.131.181.110";
         }
 #if GODOT_WEB
         Error error = client.ConnectToUrl($"wss://{IP}", new string[] { "ludus" }, true);
